@@ -87,6 +87,8 @@ function addActionsForHTMLUI() {
   document.getElementById('triangle').onclick = function() { g_selectedType = TRIANGLE; };
   document.getElementById('circle').onclick = function() { g_selectedType = CIRCLE; };
 
+  document.getElementById('goku').onclick = drawGoku;
+
   // Slider Elements
   document.getElementById('redSlide').addEventListener('mouseup', function() { g_selectedColor[0] = this.value/100; });
   document.getElementById('greenSlide').addEventListener('mouseup', function() { g_selectedColor[1] = this.value/100; });
@@ -112,7 +114,7 @@ function main() {
   canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev) }; };
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -171,6 +173,7 @@ function convertCoordinatesEventToGL(ev) {
   x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
   y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
 
+  console.log(x + ", " + y);
   return([x, y]);
 }
 
@@ -183,4 +186,76 @@ function renderAllShapes() {
   for(var i = 0; i < len; i++) {
     g_shapeList[i].render();
   }
+}
+
+function drawGoku() {
+  // Clear any existing shapes from the interactive list
+  g_shapeList = [];
+
+  // Helper to set color and draw a triangle
+  function d(col, verts) {
+    gl.uniform4f(u_FragColor, col[0], col[1], col[2], col[3]);
+    drawTriangle(verts);
+  }
+
+  // Colors
+  const SKIN = [1.0, 0.8, 0.6, 1.0];
+  const SHADOWED_SKIN = [1.0, 0.7, 0.5, 1.0];
+  const HAIR = [0.0, 0.0, 0.0, 1.0];
+  const WHITE = [1.0, 1.0, 1.0, 1.0];
+  const RED = [1.0, 0.0, 0.0, 1.0];
+  const BLUE = [0.0, 0.0, 1.0, 1.0];
+
+  // Clear canvas
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // // Hair Spikes
+  d(HAIR, [-0.27, -0.4, -0.5, -0.3, -0.3, -0.2]);
+  d(HAIR, [0.27, -0.4, 0.5, -0.3, 0.3, -0.2]);
+  d(HAIR, [-0.3, -0.25, -0.8, 0.0, -0.34, 0.2]);
+  d(HAIR, [-0.35, 0.15, -0.9, 0.5, -0.2, 0.4]);
+  d(HAIR, [-0.25, 0.35, -0.3, 0.8, 0.1, 0.35]);
+  d(HAIR, [0.08, 0.36, 0.02, 0.75, 0.3, 0.3]);
+  d(HAIR, [0.35, -0.25, 0.7, -0.075, 0.55, 0.0]);
+  d(HAIR, [0.55, 0.0, 0.95, 0.2, 0.3, 0.3]);
+
+  // Hair Background Fill
+  d(HAIR, [0.27, -0.4, 0.3, 0.3, 0.55, 0.0]);
+  d(HAIR, [0.3, 0.3, -0.3, -0.25, -0.2, 0.4]);
+  d(HAIR, [0.3, 0.3, -0.3, -0.25, 0.27, -0.4]);
+  d(HAIR, [-0.3, -0.25, -0.2, 0.4, -0.35, 0.15]);
+  d(HAIR, [-0.2, 0.4, 0.3, 0.3, 0.08, 0.36]);
+
+  // Ears
+  d(SHADOWED_SKIN, [-0.27, -0.35, -0.4, -0.2, -0.3, -0.05]);
+  d(SHADOWED_SKIN, [0.27, -0.35, 0.4, -0.2, 0.3, -0.05]);
+
+  // Head
+  d(SKIN, [-0.27, -0.5, 0.27, -0.5, -0.33, 0.04]);
+  d(SKIN, [0.27, -0.5, 0.33, 0.04, -0.33, 0.04]);
+
+  // Chin
+  d(SKIN, [-0.27, -0.5, 0.0, -0.65, 0.27, -0.5]);
+
+  // Nose
+  d(SHADOWED_SKIN, [0.0, -0.4, 0.0, -0.3, -0.05, -0.4]);
+  d(SHADOWED_SKIN, [-0.05, -0.4, 0.0, -0.425, 0.05, -0.4]);
+
+  // Eyebrows
+  d(HAIR, [-0.07, -0.25, -0.25, -0.18, -0.2, -0.12]);
+  d(HAIR, [0.07, -0.25, 0.25, -0.18, 0.2, -0.12]);
+
+  // Eye Back
+  d(WHITE, [-0.07, -0.25, -0.23, -0.25, -0.25, -0.18]);
+  d(WHITE, [0.07, -0.25, 0.23, -0.25, 0.25, -0.18]);
+
+  // Pupils
+  d(HAIR, [-0.2, -0.19, -0.18, -0.23, -0.13, -0.228]);
+  d(HAIR, [0.2, -0.19, 0.18, -0.23, 0.13, -0.228]);
+
+  // 0,0 POINT
+  var zerozero = new Point();
+  zerozero.position = [0.0, 0.0];
+  zerozero.color = [1.0, 1.0, 1.0, 1.0];
+  zerozero.render()
 }

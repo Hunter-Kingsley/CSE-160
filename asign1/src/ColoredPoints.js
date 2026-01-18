@@ -266,10 +266,4 @@ function drawGoku() {
   // Pupils
   d(HAIR, [-0.2, -0.19, -0.18, -0.23, -0.13, -0.228]);
   d(HAIR, [0.2, -0.19, 0.18, -0.23, 0.13, -0.228]);
-
-  // 0,0 POINT
-  var zerozero = new Point();
-  zerozero.position = [0.0, 0.0];
-  zerozero.color = [1.0, 1.0, 1.0, 1.0];
-  zerozero.render()
 }

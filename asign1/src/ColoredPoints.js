@@ -75,6 +75,7 @@ let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
 let g_selectedType = POINT;
 let g_segments = 10;
+let g_randomDrawMode = false;
 
 function addActionsForHTMLUI() {
   // Button Events
@@ -97,6 +98,11 @@ function addActionsForHTMLUI() {
   document.getElementById('sizeSlide').addEventListener('mouseup', function() { g_selectedSize = this.value; });
 
   document.getElementById('segmentsSlide').addEventListener('mouseup', function() { g_segments = this.value });
+
+  document.getElementById('transSlide').addEventListener('mouseup', function() { g_selectedColor[3] = this.value/100.0 });
+
+  // Checkbox Elements
+  document.getElementById('randomColorMode').addEventListener('change', function() { g_randomDrawMode = this.checked; });
 }
 
 function main() {
@@ -111,7 +117,15 @@ function main() {
 
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev) }; };
+  canvas.onmousemove = function(ev) { 
+    if(ev.buttons == 1) { 
+      click(ev) 
+    };
+    
+    if(g_randomDrawMode) {
+      g_selectedColor = [Math.random(), Math.random(), Math.random(), 1.0]
+    };
+  };
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.5, 0.5, 0.5, 1.0);
